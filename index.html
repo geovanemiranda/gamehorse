@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo do Cavalo</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        .board { display: grid; grid-template-columns: repeat(6, 50px); gap: 2px; justify-content: center; }
+        .cell { width: 50px; height: 50px; background-color: lightgray; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .visited { background-color: red; }
+        .knight { font-size: 24px; }
+    </style>
+</head>
+<body>
+    <h1>Jogo do Cavalo</h1>
+    <div class="board" id="board"></div>
+    <script>
+        const boardSize = 6;
+        const board = document.getElementById("board");
+
+        let knightPosition = { x: 0, y: 0 };
+        let visitedCells = [];
+
+        function createBoard() {
+            board.innerHTML = "";
+            for (let y = 0; y < boardSize; y++) {
+                for (let x = 0; x < boardSize; x++) {
+                    let cell = document.createElement("div");
+                    cell.classList.add("cell");
+                    cell.dataset.x = x;
+                    cell.dataset.y = y;
+
+                    if (x === knightPosition.x && y === knightPosition.y) {
+                        cell.innerHTML = "♞";
+                        cell.classList.add("knight");
+                    } else if (visitedCells.some(pos => pos.x === x && pos.y === y)) {
+                        cell.classList.add("visited");
+                    }
+
+                    cell.addEventListener("click", () => moveKnight(x, y));
+                    board.appendChild(cell);
+                }
+            }
+        }
+
+        function moveKnight(x, y) {
+            const dx = Math.abs(x - knightPosition.x);
+            const dy = Math.abs(y - knightPosition.y);
+            
+            // Movimento válido do cavalo (duas casas em uma direção e uma em outra)
+            if ((dx === 2 && dy === 1) || (dx === 1 && dy === 2)) {
+                visitedCells.push({ x: knightPosition.x, y: knightPosition.y }); // Marca o local anterior
+                knightPosition = { x, y };
+                createBoard();
+            } else {
+                alert("Movimento inválido!");
+            }
+        }
+
+        createBoard();
+    </script>
+</body>
+</html>
