@@ -6,7 +6,7 @@
     <title>Jogo do Cavalo</title>
     <style>
         body { font-family: Arial, sans-serif; text-align: center; }
-        .board { display: grid; grid-template-columns: repeat(6, 50px); gap: 2px; justify-content: center; }
+        .board { display: grid; gap: 2px; justify-content: center; }
         .cell { width: 50px; height: 50px; background-color: lightgray; display: flex; align-items: center; justify-content: center; cursor: pointer; }
         .visited { background-color: red; }
         .knight { font-size: 24px; }
@@ -14,15 +14,26 @@
 </head>
 <body>
     <h1>Jogo do Cavalo</h1>
-    <div class="board" id="board"></div>
-    <script>
-        const boardSize = 6;
-        const board = document.getElementById("board");
 
+    <label for="boardSize">Escolha o tamanho:</label>
+    <select id="boardSize" onchange="changeBoardSize()">
+        <option value="6">6x6</option>
+        <option value="7">7x7</option>
+        <option value="8">8x8</option>
+    </select>
+    
+    <button onclick="resetGame()">Reiniciar Jogo</button>
+    
+    <div class="board" id="board"></div>
+
+    <script>
+        let boardSize = 6;
+        const board = document.getElementById("board");
         let knightPosition = { x: 0, y: 0 };
         let visitedCells = [];
 
         function createBoard() {
+            board.style.gridTemplateColumns = `repeat(${boardSize}, 50px)`;
             board.innerHTML = "";
             for (let y = 0; y < boardSize; y++) {
                 for (let x = 0; x < boardSize; x++) {
@@ -56,6 +67,17 @@
             } else {
                 alert("Movimento inválido!");
             }
+        }
+
+        function resetGame() {
+            knightPosition = { x: 0, y: 0 };
+            visitedCells = [];
+            createBoard();
+        }
+
+        function changeBoardSize() {
+            boardSize = parseInt(document.getElementById("boardSize").value);
+            resetGame();
         }
 
         createBoard();
